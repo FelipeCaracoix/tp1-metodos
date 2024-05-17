@@ -17,7 +17,7 @@ w = MatrizRala(len_letras,len_letras)
 
 assignments = {
     (1, 0): 1, (5, 0): 1, (6, 0): 1, # B, F y G citan a A
-    (0, 2): 1,
+    (0, 2): 1, #A cita a C
     (0, 3): 1, (0, 4): 1,
     (8, 5): 1,
     (5, 6): 1,
@@ -116,3 +116,23 @@ def P_it(d,N,W,D):
 pIt, errores = P_it(0.85,len_letras,W,D)
 print("\n\nMétodo iterativo de PageRank con distribución inicial equiprobable:", pIt)
 print("\n\nErrores en cada iteración:", errores)
+
+
+
+
+def print_ranking(pestrella):
+    # Crear una lista de tuplas (índice, valor)
+    ranking = [(i, pestrella[i,0]) for i in range((pestrella.shape[0]))]
+    
+    # Ordenar la lista en orden descendente por el valor
+    ranking.sort(key=lambda x: x[1], reverse=True)
+    
+    # Crear un diccionario para mapear los índices a las letras
+    letras = {0: 'A', 1: 'B', 2: 'C', 3: 'D', 4: 'E', 5: 'F', 6: 'G', 7: 'H', 8: 'I', 9: 'J', 10: 'K'}
+    
+    # Imprimir el ranking
+    for i, valor in ranking:
+        print(f'Paper {letras[i]}: {valor}')
+
+# Llamar a la función para imprimir el ranking
+print_ranking(pestrella)
