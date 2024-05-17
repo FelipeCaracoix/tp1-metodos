@@ -74,12 +74,16 @@ d = 0.85
 N = len_letras
 
 A = (matriz_identidad - (d*W)@D)
-b = []
+b = MatrizRala(len_letras,1)
 for i in range(len_letras):
-    b.append((1 - d)/N)
+    b[i,0]= (1 - d)/N
 
 pestrella = GaussJordan(A,b)
 print(pestrella)
+suma = 0 
+for i in range(len_letras):
+    suma = suma + pestrella[i,0]
+print("la suma de pestrella da: ", suma)
 
 
 def P_it(d,N,W,D):

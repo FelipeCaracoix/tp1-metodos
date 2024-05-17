@@ -116,6 +116,7 @@ class MatrizRala:
     def __setitem__(self, Idx, v):
         # Esta función implementa la asignación durante indexación (Idx es una tupla (m,n)) -> A[m,n] = v
         m, c = Idx # m filas, c columnas
+    
         if m in self.filas:
             fila = self.filas[m]
             actual = fila.raiz
@@ -123,9 +124,19 @@ class MatrizRala:
             while actual is not None:
                 if actual.valor[0] == c:
                     # Si la columna ya existe en la fila, actualizamos el valor
-                    actual.valor = (c, v)
-                    return
-                elif actual.valor[0] > c:
+                    if v == 0:
+                    # Si el valor es cero, eliminamos el nodo
+                        if anterior is None:
+                            fila.raiz = actual.siguiente
+                        else:
+                            anterior.siguiente = actual.siguiente
+                    # Si la fila está vacía después de eliminar el nodo, eliminamos la fila
+                        if fila.raiz is None:
+                            del self.filas[m]    
+                    else:
+                        actual.valor = (c, v)
+                        return
+                elif actual.valor[0] > c and v != 0:
                     # Si encontramos una columna mayor que la que buscamos, insertamos el nuevo valor antes
                     nuevo_nodo = ListaEnlazada.Nodo((c, v), actual)
                     if anterior is None:
@@ -312,54 +323,71 @@ class MatrizRala:
         return res
 
 def GaussJordan(A, b):
-    # Hallar solucion x para el sistema Ax = b
-    # Devolver error si el sistema no tiene solucion o tiene infinitas soluciones, con el mensaje apropiado
-    if A.shape[0] != len(b):
+    if A.shape[0] != b.shape[0]:
         raise ValueError("Los tamaños de b y A no son compatibles")
 
+    # Crear la matriz aumentada
     M = MatrizRala(A.shape[0], A.shape[1] + 1)
-    for i in range(A.shape[0]):
-        for j in range(A.shape[1]):
-            M[i, j] = A[i, j]
-        M[i, A.shape[1]] = b[i]  # La última columna es b
+    for i in A.filas:
+        actual = A.filas[i].raiz
+        while actual is not None:
+            M[i, actual.valor[0]] = actual.valor[1]
+            actual = actual.siguiente
 
-    for i in range(A.shape[0]):  # Gauss-Jordan elimination
-        if M[i, i] == 0:
-            for k in range(i + 1, A.shape[0]):
+    for i in b.filas:
+        M[i, A.shape[1]] = b[i, 0]
+
+    for i in range(A.shape[0]):
+        # Hacer pivote en M[i, i]
+        if M[i, i] == 0: # si mi pivote es 0
+            for k in range(i + 1, A.shape[0]): #intercambio filas hasta que pivote != 0
                 if M[k, i] != 0:
-                    # Swap rows if necessary
                     for j in range(A.shape[1] + 1):
-                        M[i, j], M[k, j] = M[k, j], M[i, j]  # Intercambiar filas
+                        M[i, j], M[k, j] = M[k, j], M[i, j]
                     break
             if M[i, i] == 0:
-                if M[i, -1] == 0:
+                if M[i, A.shape[1]] == 0:
                     raise ValueError("El sistema tiene infinitas soluciones.")
                 else:
                     raise ValueError("El sistema no tiene solución.")
 
+        # Dividir fila i por M[i, i] para que el pivote sea 1
         divisor = M[i, i]
-        for j in range(A.shape[1] + 1):
-            M[i, j] /= divisor
+        actual = M.filas[i].raiz
+        while actual != None:
+            actual.valor = (actual.valor[0], actual.valor[1]/divisor)
+            actual = actual.siguiente
+        
 
-        for k in range(A.shape[0]):
+        # Hacer ceros en la columna del pivote para todas las filas excepto la fila i
+        for k in M.filas:
             if k != i:
-                factor = M[k, i]
-                for j in range(i, A.shape[1] + 1):
+                factor = M[k,i] 
+                for j in range(A.shape[1] + 1):     #no puedo iterar por filas porque a los 0s tambien se les debe restar
                     M[k, j] -= factor * M[i, j]
+        
+        
 
-    # Check for free variables by looking for rows that are all zeros except for the right-hand side
-    for i in range(A.shape[0]):
-        if all(M[i, j] == 0 for j in range(A.shape[1])) and M[i, A.shape[1]] != 0:
+    # Comprobar si el sistema tiene solución
+    for i in M.filas:
+        actual = M.filas[i].raiz
+        suma = 0
+        while actual != None:
+            if actual.valor[0] != M.shape[0]:
+                suma = suma + actual.valor[1]
+            actual = actual.siguiente
+        if suma == 0 and M[i, A.shape[1]] != 0:
             raise ValueError("El sistema no tiene solución.")
 
-    # Check if the number of pivots (non-zero leading terms) is less than the number of variables
-    pivot_count = sum(1 for i in range(min(A.shape[0], A.shape[1])) if M[i, i] != 0)
+
+
+    pivot_count = sum(1 for i in range(min(A.shape[0], A.shape[1])) if M[i, i] != 0) #debo recorrer por shape porque en todas las posiciones debe haber un pivote
     if pivot_count < A.shape[1]:
         raise ValueError("El sistema tiene infinitas soluciones debido a las variables libres.")
 
-    x = [0] * A.shape[0]
-    for i in range(A.shape[0]):
-        x[i] = M[i, A.shape[1]]
+    x = MatrizRala(A.shape[0], 1) #extraemos el vector solucion
+    for i in M.filas:
+        x[i,0] = M[i, A.shape[1]]
     return x
 
 def suma_constante_matriz(matriz, constante):
