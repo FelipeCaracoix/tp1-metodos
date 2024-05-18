@@ -236,7 +236,7 @@ class MatrizRala:
         # Crea una matriz resultante inicializada como una matriz rala de la misma forma que las matrices de entrada
         result = MatrizRala(self.shape[0], self.shape[1])
 
-        result = self + (-1*other)
+        result = self + (-1 * other)
 
         return result
 
