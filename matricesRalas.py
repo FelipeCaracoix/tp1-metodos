@@ -246,23 +246,31 @@ class MatrizRala:
         if self.shape[1] != other.shape[0]:
             raise Exception
 
+        if self.shape[1] != other.shape[0]:
+            raise Exception
+
+        # Se crea una nueva matriz rala 'res' con el número de filas de la primera matriz (self)
+        # y el número de columnas de la segunda matriz (other).
         res = MatrizRala(self.shape[0], other.shape[1])
-            # Iterate only over non-zero elements in self
 
+        # Iterar solo sobre los elementos no nulos en la primera matriz (self).
         for i in self.filas:
+            # Se verifica si la fila 'i' está presente en self.
             if i in self.filas:
-                current_row = self.filas[i].raiz
+                current_row = self.filas[i].raiz  # Puntero al inicio de la fila 'i' en self.
                 while current_row is not None:
-                    k = current_row.valor[0]  # Column index in self which corresponds to row index in other
+                    k = current_row.valor[0]  # Índice de columna en self que corresponde al índice de fila en other.
+                    # Si la fila 'k' está presente en other.
                     if k in other.filas:
-                        current_col = other.filas[k].raiz
+                        current_col = other.filas[k].raiz  # Puntero al inicio de la fila 'k' en other.
                         while current_col is not None:
-                            j = current_col.valor[0]  # Column index in other
-                            # Multiply and add to the corresponding element in result
+                            j = current_col.valor[0]  # Índice de columna en other.
+                            # Multiplicar y añadir al elemento correspondiente en res.
                             res[i, j] += self[i, k] * other[k, j]
-                            current_col = current_col.siguiente
-                    current_row = current_row.siguiente
+                            current_col = current_col.siguiente  # Avanzar al siguiente nodo en la fila 'k' de other.
+                    current_row = current_row.siguiente  # Avanzar al siguiente nodo en la fila 'i' de self.
 
+        # Devolver la matriz resultante 'res' que contiene el producto matricial de self y other.
         return res
 
 
