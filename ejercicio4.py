@@ -39,7 +39,6 @@ def cargar_papers():
 def genW(lista_citas, lista_papers):
     W = MatrizRala(len(lista_papers),len(lista_papers))
     for citador, cita in lista_citas:
-        if citador < len(lista_papers) and cita < len(lista_papers):
             W[citador, cita] = 1
     return W
 

@@ -313,7 +313,6 @@ def GaussJordan(A, b):
         while actual != None:
             actual.valor = (actual.valor[0], actual.valor[1]/divisor)
             actual = actual.siguiente
-        
 
         # Hacer ceros en la columna del pivote para todas las filas excepto la fila i
         for k in M.filas:
