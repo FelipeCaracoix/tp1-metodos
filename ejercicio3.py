@@ -80,7 +80,8 @@ for i in range(len_letras):
 
 pestrella = GaussJordan(A,b)
 print(pestrella)
-suma = 0 
+
+suma = 0
 for i in range(len_letras):
     suma = suma + pestrella[i,0]
 print("la suma de pestrella da: ", suma)
@@ -100,7 +101,6 @@ def P_it(d,N,W,D):
     d_W = d * W
     d_WD = d_W @ D
 
-
     while error > tolerance:
         # Multiplica la matriz W_D por el vector p_t y escala por d
         p_t_plus_1 = d_WD @ p_t
@@ -116,9 +116,6 @@ def P_it(d,N,W,D):
 pIt, errores = P_it(0.85,len_letras,W,D)
 print("\n\nMétodo iterativo de PageRank con distribución inicial equiprobable:", pIt)
 print("\n\nErrores en cada iteración:", errores)
-
-
-
 
 def print_ranking(pestrella):
     # Crear una lista de tuplas (índice, valor)
