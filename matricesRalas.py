@@ -242,12 +242,13 @@ class MatrizRala:
 
 
     def __matmul__( self, other ):
-        # COMPLETAR:
         # Esta funcion implementa el producto matricial (notado en Python con el operador "@" ) -> A @ B
         if self.shape[1] != other.shape[0]:
             raise Exception
+
         res = MatrizRala(self.shape[0], other.shape[1])
             # Iterate only over non-zero elements in self
+
         for i in self.filas:
             if i in self.filas:
                 current_row = self.filas[i].raiz
