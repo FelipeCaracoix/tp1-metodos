@@ -236,51 +236,7 @@ class MatrizRala:
         # Crea una matriz resultante inicializada como una matriz rala de la misma forma que las matrices de entrada
         result = MatrizRala(self.shape[0], self.shape[1])
 
-        # Itera sobre las filas de self
-        for i in self.filas:
-            # Verifica si la fila i está presente en other
-            if i in other.filas:
-                current_self = self.filas[i].raiz
-                current_other = other.filas[i].raiz
-                # Itera sobre los elementos de la fila i en self y other
-                while current_self is not None or current_other is not None:
-                    if current_self is None:
-                        # Si no hay más elementos en self, copia los elementos restantes de other con signo negativo
-                        result[i, current_other.valor[0]] = -current_other.valor[1]
-                        current_other = current_other.siguiente
-                    elif current_other is None:
-                        # Si no hay más elementos en other, copia los elementos restantes de self
-                        result[i, current_self.valor[0]] = current_self.valor[1]
-                        current_self = current_self.siguiente
-                    elif current_self.valor[0] == current_other.valor[0]:
-                        # Si los elementos tienen la misma columna, resta los valores
-                        resta = current_self.valor[1] - current_other.valor[1]
-                        if resta != 0:
-                            result[i, current_self.valor[0]] = resta
-                        current_self = current_self.siguiente
-                        current_other = current_other.siguiente
-                    elif current_self.valor[0] < current_other.valor[0]:
-                        # Si el índice de columna de self es menor que el de other, copia el elemento de self
-                        result[i, current_self.valor[0]] = current_self.valor[1]
-                        current_self = current_self.siguiente
-                    else:
-                        # Si el índice de columna de other es menor que el de self, copia el elemento de other con signo negativo
-                        result[i, current_other.valor[0]] = -current_other.valor[1]
-                        current_other = current_other.siguiente
-            else:
-                # Si la fila está presente en self pero no en other, copia los elementos de self
-                current_self = self.filas[i].raiz
-                while current_self is not None:
-                    result[i, current_self.valor[0]] = current_self.valor[1]
-                    current_self = current_self.siguiente
-
-        # Copia los elementos de other que no están presentes en self con signo negativo
-        for i in other.filas:
-            if i not in self.filas:
-                current_other = other.filas[i].raiz
-                while current_other is not None:
-                    result[i, current_other.valor[0]] = -current_other.valor[1]
-                    current_other = current_other.siguiente
+        result = self + (-1*other)
 
         return result
 
