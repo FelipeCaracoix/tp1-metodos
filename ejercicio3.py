@@ -1,4 +1,5 @@
 from matricesRalas import ListaEnlazada, MatrizRala, GaussJordan, multiplicar_matriz_vector
+import matplotlib.pyplot as plt
 # a = 0
 # b = 1
 # c = 2
@@ -133,3 +134,19 @@ def print_ranking(pestrella):
 
 # Llamar a la función para imprimir el ranking
 print_ranking(pestrella)
+
+
+
+
+def compare_and_plot(pIt, pestrella, errores):
+    diff_abs = [abs(pIt[i, 0] - pestrella[i, 0]) for i in range(len_letras)]
+    iteraciones = list(range(len(errores)))
+
+    plt.plot(iteraciones, errores, label='Error por iteración')
+    plt.xlabel('Iteraciones')
+    plt.ylabel('Error')
+    plt.title('Convergencia del método iterativo')
+    plt.legend()
+    plt.show()
+
+compare_and_plot(pIt, pestrella, errores)

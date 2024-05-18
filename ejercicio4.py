@@ -69,7 +69,6 @@ def P_it(d,N,W,D):
     p_t = MatrizRala(N,1)     # Initial equiprobable distribution
     for i in range(N):
         p_t[i,0] = 1/N
-
     tolerance = 1e-6
     errores = []
     error = 1
@@ -93,31 +92,38 @@ def P_it(d,N,W,D):
     return p_t, errores
 
 
+def print_all_W_values(W):
+    for fila in W.filas:
+        actual = W.filas[fila].raiz
+        while actual is not None:
+            columna = actual.valor[0]
+            valor = actual.valor[1]
+            print(f"W[{fila}, {columna}] = {valor}")
+            actual = actual.siguiente
+
 def main():
     
     # Llamar a la función y pasar la ruta al archivo CSV
     lista_citas = cargar_citas_csv()
     lista_papers = cargar_papers()
 
-    W = genW(lista_citas,lista_papers)
     
-    D = genD(W)
+    W = genW(lista_citas,lista_papers)
+    D = genD(W)    
+    print_all_W_values(D)
+
     N = len(lista_papers)
     d = 0.85
 
     page_ranks = P_it(d, N, W, D)
-    
     # Create list of (PageRank score, index)
     lista = [(page_ranks[0][i, 0], i) for i in range(len(lista_papers))]
-
     # Sort by PageRank score in descending order
     sorted_papers = sorted(lista, key=lambda x: x[0], reverse=True)
-
     # Print the top 10 papers with podium ranking
     print("Top 10 Papers by PageRank:")
     for rank, (score, index) in enumerate(sorted_papers[:10], start=1):
-        print(f"{rank}. Paper ID: {lista_papers[index][0]}, Title: \"{lista_papers[index][1]}\", Score: {score:.6f}")
-
+            print(f"{rank}. Paper ID: {lista_papers[index][0]}, Title: \"{lista_papers[index][1]}\", Score: {score:.6f}")
 
 if __name__ == "__main__":
     main()
