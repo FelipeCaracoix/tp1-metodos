@@ -123,13 +123,13 @@ print("\n\nErrores en cada iteración:", errores)
 def print_ranking(pestrella):
     # Crear una lista de tuplas (índice, valor)
     ranking = [(i, pestrella[i,0]) for i in range((pestrella.shape[0]))]
-    
+
     # Ordenar la lista en orden descendente por el valor
     ranking.sort(key=lambda x: x[1], reverse=True)
-    
+
     # Crear un diccionario para mapear los índices a las letras
     letras = {0: 'A', 1: 'B', 2: 'C', 3: 'D', 4: 'E', 5: 'F', 6: 'G', 7: 'H', 8: 'I', 9: 'J', 10: 'K'}
-    
+
     # Imprimir el ranking
     for i, valor in ranking:
         print(f'Paper {letras[i]}: {valor}')
