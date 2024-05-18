@@ -318,11 +318,9 @@ def GaussJordan(A, b):
         # Hacer ceros en la columna del pivote para todas las filas excepto la fila i
         for k in M.filas:
             if k != i:
-                factor = M[k,i] 
+                factor = M[k,i]
                 for j in range(A.shape[1] + 1):     #no puedo iterar por filas porque a los 0s tambien se les debe restar
                     M[k, j] -= factor * M[i, j]
-        
-        
 
     # Comprobar si el sistema tiene solución
     for i in M.filas:
@@ -334,8 +332,6 @@ def GaussJordan(A, b):
             actual = actual.siguiente
         if suma == 0 and M[i, A.shape[1]] != 0:
             raise ValueError("El sistema no tiene solución.")
-
-
 
     pivot_count = sum(1 for i in range(min(A.shape[0], A.shape[1])) if M[i, i] != 0) #debo recorrer por shape porque en todas las posiciones debe haber un pivote
     if pivot_count < A.shape[1]:
