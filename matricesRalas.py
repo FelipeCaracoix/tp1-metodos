@@ -311,10 +311,7 @@ def GaussJordan(A, b):
                         M[i, j], M[k, j] = M[k, j], M[i, j]
                     break
             if M[i, i] == 0:
-                if M[i, A.shape[1]] == 0:
-                    raise ValueError("El sistema tiene infinitas soluciones.")
-                else:
-                    raise ValueError("El sistema no tiene solución.")
+                raise ValueError("El sistema no tiene solucion unica")
 
         # Dividir fila i por M[i, i] para que el pivote sea 1
         divisor = M[i, i]
