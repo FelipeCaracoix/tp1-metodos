@@ -11,29 +11,10 @@ from matricesRalas import ListaEnlazada, MatrizRala, GaussJordan, multiplicar_ma
 # j = 9
 # k = 10
 
-len_letras = 11
-
-w = MatrizRala(len_letras,len_letras)
-
-assignments = {
-    (1, 0): 1, (5, 0): 1, (6, 0): 1, # B, F y G citan a A
-    (0, 2): 1, #A cita a C
-    (0, 3): 1, (0, 4): 1,
-    (8, 5): 1,
-    (5, 6): 1,
-    (6, 7): 1,
-    (6, 8): 1, (7, 8): 1, (9, 8): 1,
-    (4, 10): 1
-}
-
 def build_w(matriz, citas):
-    for indices, value in assignments.items():
-        w[indices] = value
-    return w
-
-
-W = build_w(w, assignments)
-print(W)
+    for indices, value in citas.items():
+        matriz[indices] = value
+    return matriz
 
 def build_d(matriz_w):
     D = MatrizRala(matriz_w.shape[0], matriz_w.shape[1])
@@ -63,30 +44,6 @@ def matriz_de_unos(n,m):
             matriz[i,j] = 1
     return matriz
 
-
-D = build_d(W)
-
-# (identidad - d*W*D)*pestrella = (1-d)/N * 1|
-# d = 0.85
-matriz_identidad = matriz_identidad(len_letras,len_letras)
-
-d = 0.85
-N = len_letras
-
-A = (matriz_identidad - (d*W)@D)
-b = MatrizRala(len_letras,1)
-for i in range(len_letras):
-    b[i,0]= (1 - d)/N
-
-pestrella = GaussJordan(A,b)
-print(pestrella)
-
-suma = 0
-for i in range(len_letras):
-    suma = suma + pestrella[i,0]
-print("la suma de pestrella da: ", suma)
-
-
 def P_it(d,N,W,D):
     p_t = MatrizRala(N,1)     # Initial equiprobable distribution
     for i in range(N):
@@ -113,9 +70,6 @@ def P_it(d,N,W,D):
         p_t = p_t_plus_1
     return p_t, errores
 
-pIt, errores = P_it(0.85,len_letras,W,D)
-print("\n\nMétodo iterativo de PageRank con distribución inicial equiprobable:", pIt)
-print("\n\nErrores en cada iteración:", errores)
 
 def print_ranking(pestrella):
     # Crear una lista de tuplas (índice, valor)
@@ -131,5 +85,56 @@ def print_ranking(pestrella):
     for i, valor in ranking:
         print(f'Paper {letras[i]}: {valor}')
 
-# Llamar a la función para imprimir el ranking
-print_ranking(pestrella)
+
+
+
+def main():
+    len_letras = 11
+
+    w = MatrizRala(len_letras,len_letras)
+
+    assignments = {
+        (1, 0): 1, (5, 0): 1, (6, 0): 1, # B, F y G citan a A
+        (0, 2): 1, #A cita a C
+        (0, 3): 1, (0, 4): 1,
+        (8, 5): 1,
+        (5, 6): 1,
+        (6, 7): 1,
+        (6, 8): 1, (7, 8): 1, (9, 8): 1,
+        (4, 10): 1
+    }
+
+    W = build_w(w, assignments)
+    print(W)
+
+    D = build_d(W)
+
+    # (identidad - d*W*D)*pestrella = (1-d)/N * 1|
+    # d = 0.85
+    matriz_id = matriz_identidad(len_letras,len_letras)
+
+    d = 0.85
+    N = len_letras
+
+    A = (matriz_id - (d*W)@D)
+    b = MatrizRala(len_letras,1)
+    for i in range(len_letras):
+        b[i,0]= (1 - d)/N
+
+    pestrella = GaussJordan(A,b)
+    print(pestrella)
+
+    suma = 0
+    for i in range(len_letras):
+        suma = suma + pestrella[i,0]
+    print("la suma de pestrella da: ", suma)
+
+    pIt, errores = P_it(0.85,len_letras,W,D)
+    print("\n\nMétodo iterativo de PageRank con distribución inicial equiprobable:", pIt)
+    print("\n\nErrores en cada iteración:", errores)
+    
+    # Llamar a la función para imprimir el ranking
+    print_ranking(pestrella)
+
+if __name__ == "__main__":
+    main()
