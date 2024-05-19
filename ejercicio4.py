@@ -1,6 +1,7 @@
 import pandas as pd
 from matricesRalas import *
 import csv
+
 papers = pd.read_csv('papers/papers.csv', header = 0)
 citas = pd.read_csv('papers/citas.csv', header = 0)
 
@@ -15,7 +16,7 @@ for index, row in citas.iterrows():
 for i in range(len(cantidad_citas)):
     if cantidad_citas[i] != 0:
         D[i, i] = 1/cantidad_citas[i]
-        
+
 
 def matriz_de_unos(n,m):
     matriz = MatrizRala(n,m)
@@ -53,14 +54,12 @@ def P_it(d,N,W,D):
 
 
 def main():
-    
-    # Llamar a la función y pasar la ruta al archivo CSV
-    
+
     N = len(papers)
     d = 0.85
 
     page_ranks = P_it(d, N, W, D)
-    
+
     # Create list of (PageRank score, index)
     lista = [(page_ranks[0][i, 0], i) for i in range(len(papers))]
 
@@ -72,5 +71,6 @@ def main():
     for rank, (score, paper_id) in enumerate(sorted_papers[:10], start=1):
         paper = papers.loc[paper_id]
         print(f"{rank}. Paper ID: {paper['id']}, Title: \"{paper['titulo']}\", Score: {score}")
+
 if __name__ == "__main__":
     main()
